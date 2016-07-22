@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.SearchController">
+   <top>
+   <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="25.0" prefWidth="487.0">
+               <children>
+                  <TextField fx:id="inputSearch" prefHeight="25.0" prefWidth="662.0" promptText="Search">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TextField>
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="89.0" text="Search">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="label" prefHeight="17.0" prefWidth="751.0" style="-fx-background-color: #0091EA;" text="" textFill="WHITE">
+               <effect>
+                  <ColorAdjust />
+               </effect>
+               <VBox.margin>
+                  <Insets bottom="3.0" left="5.0" right="5.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+            <ListView fx:id="listview" prefHeight="355.0" prefWidth="750.0">
+               <VBox.margin>
+                  <Insets bottom="2.0" left="5.0" right="5.0" />
+               </VBox.margin>
+            </ListView>
+         </children>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>
