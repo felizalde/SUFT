@@ -72,6 +72,28 @@ public class QueryEval {
         return ((double)totalRel(response)/(totalHigh + totalPartial));
     }
 
+    private int totalRel(Response response){
+        Iterator<UThread> it = response.getItems().iterator();
+        int acc = 0;
+        while (it.hasNext()){
+            String id = it.next().getID();
+            if (isRelevant(id)){
+              acc++;
+            }
+          }
+        return acc;
+      }
+
+    private boolean isRelevant(String id){
+        int current = LOW;
+        if (this.relevances.containsKey(id)){
+            current = this.relevances.get(id);
+        }
+        if((current==HIGH)||(current==PARTIAL)){
+            return true;
+        }
+        return false;
+      }
 
     public List<PRData> datacharts(Response response){
       List<PRData> out = new ArrayList<PRData>();
