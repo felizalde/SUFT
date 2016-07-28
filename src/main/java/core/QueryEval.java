@@ -1,9 +1,8 @@
 package core;
 
 
-import javafx.util.Pair;
-import searcher.Response;
 
+import searcher.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,9 +15,6 @@ public class QueryEval {
     private static int PARTIAL = 1;
     private static int LOW = 0;
 
-    //HIGH and PARTIAL importance..
-    private static double P_HIGH = 1;
-    private static double P_PARTIAL = 1;
 
     private double totalLow = 0;
     private double totalPartial = 0;
@@ -64,99 +60,36 @@ public class QueryEval {
         return (2/((1/r)+(1/p)));
     }
 
-    public double fallout(Response response){
-        return totalNotRelevant(response)/totalLow;
-    }
-
-    public int getQueryHits(){
-        return this.relevances.size();
-    }
-
     public String toString(){
         return this.query;
     }
 
-    private double relevance(Response response){
-        int current;
-        double partial = 0;
-        double high = 0;
-        Iterator<UThread> it = response.getItems().iterator();
-        while (it.hasNext()){
-            current = LOW;
-            String id = it.next().getID();
-
-            if (this.relevances.get(id) != null){
-                current = this.relevances.get(id);
-            }
-
-
-            if(current==HIGH)high++;
-            if(current==PARTIAL)partial++;
-
-        }
-
-        return ((P_HIGH*high)+(P_PARTIAL*partial));
-
+    public double precision(Response response){
+        return ((double)totalRel(response)/response.getItemsCount());
     }
 
-    private double precision(Response response){
-        return (relevance(response)/response.getItemsCount());
-    }
-
-    private double recall(Response response){
-        return (relevance(response)/((P_HIGH*totalHigh)+(P_PARTIAL*totalPartial)));
-    }
-
-    private int totalNotRelevant(Response response) {
-        int recu = 0;
-        int current = 0;
-        Iterator<UThread> it = response.getItems().iterator();
-        while (it.hasNext()) {
-            current = LOW;
-            String id = it.next().getID();
-
-            if (this.relevances.get(id) != null) {
-                current = this.relevances.get(id);
-            }
-            if (current == LOW) recu++;
-        }
-        return recu;
+    public double recall(Response response){
+        return ((double)totalRel(response)/(totalHigh + totalPartial));
     }
 
 
-    public List<Pair<Number, Number>> datacharts(Response response){
-        List<Pair<Number,Number>> out = new ArrayList<Pair<Number, Number>>();
-        double totalRec = 0;
-        double relRecuperados = 0;
-        int current = LOW;
-        Iterator<UThread> it = response.getItems().iterator();
-        while (it.hasNext()){
-            totalRec++;
-            current = LOW;
-            String id = it.next().getID();
-            if (this.relevances.get(id) != null){
-                current = this.relevances.get(id);
-            }
-            if((current==HIGH)||(current==PARTIAL)){
-                relRecuperados++;
-            }
+    public List<PRData> datacharts(Response response){
+      List<PRData> out = new ArrayList<PRData>();
+      double totalRec = 0;
+      double relRecuperados = 0;
+      Iterator<UThread> it = response.getItems().iterator();
+      while (it.hasNext()){
+          totalRec++;
+          String id = it.next().getID();
+          if (isRelevant(id)){
+              relRecuperados++;
+          }
 
-            double p = (relRecuperados/totalRec);
-            double r = (relRecuperados/(totalHigh+totalPartial));
-
-            out.add(new Pair(p, r));
-        }
-        return out;
-    }
-
-    /**
-     *   PRECISION:
-     *   P : ((0.8*#REL.REC)+(0.2*#PAR.REC))/#TOTALREC
-     *   RECALL:
-     *   R : ((0.8*#REL.REC)+(0.2*#PAR.REC))/((0.8*#REL.T)+(0.2*#PAR.T)
-     *
-     *   Calcular precision y recall en cada momento.
-     *
-     */
+          double p = (relRecuperados/totalRec);
+          double r = (relRecuperados/(totalPartial+totalHigh));
+          out.add(new PRData(p, r));
+      }
+      return out;
+  }
 
 }
