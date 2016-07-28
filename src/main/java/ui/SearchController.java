@@ -12,12 +12,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import searcher.Response;
-
-import java.io.UTFDataFormatException;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventHandler;
+import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class SearchController implements Initializable{
@@ -29,7 +28,7 @@ public class SearchController implements Initializable{
     @FXML
     private ListView<UThread> listview = new ListView<UThread>();
 
-    private ObservableList<UThread> sample;
+    private ObservableList<UThread> result;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -52,9 +51,22 @@ public class SearchController implements Initializable{
                 return cell;
             }
         });
-        sample = FXCollections.observableArrayList();
-        listview.setItems(sample);
-
+        result = FXCollections.observableArrayList();
+        listview.setItems(result);
+        listview.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                if(event.getClickCount() > 1){
+                    String path = listview.getSelectionModel().getSelectedItem().toString();
+                    if (path != null){
+                      try {
+                        new ProcessBuilder("x-www-browser", path).start();
+                      } catch (IOException e) {
+                        e.printStackTrace();
+                      }
+                    }
+                  }
+                }
+              });
     }
 
 
@@ -69,13 +81,13 @@ public class SearchController implements Initializable{
             return;
         }
         this.label.setText("Resultados");
-        sample.clear();
+        result.clear();
         Response res = SUFTHelper.getInstance().search(query);
         if (res!=null){
             Iterator<UThread> it = res.getItems().iterator();
             while (it.hasNext()){
                 UThread thread = it.next();
-                sample.add(thread);
+                result.add(thread);
             }
         }
     }
