@@ -1,6 +1,6 @@
 package ui;
 
-
+import core.PRData;
 import core.QueryEval;
 import core.SUFTHelper;
 import javafx.collections.FXCollections;
@@ -12,8 +12,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.util.Pair;
 import searcher.Response;
+import javafx.scene.control.Tooltip;
 
 import java.io.*;
 import java.net.URL;
@@ -26,7 +26,7 @@ public class MeasuresController implements Initializable {
 
     private ArrayList<QueryEval> evals;
     private File file;
-
+    private static final int POSITIONS = 10;
 
     @FXML
     private TextField pathRelev;
@@ -94,10 +94,12 @@ public class MeasuresController implements Initializable {
             return;
         }
         String query = eval.toString();
-        Response response = SUFTHelper.getInstance().search(query, eval.getQueryHits());
+        Response response = SUFTHelper.getInstance().search(query, POSITIONS);
         drawChart(eval.datacharts(response),query);
         double fmeasure = eval.fmeasure(response);
-        this.resFMeasureLabel.setText(fmeasure+"");
+        this.resFMeasureLabel.setText(fmeasure + "");
+        System.out.println("Precision: " + eval.precision(response));
+        System.out.println("Recall: " + eval.recall(response));
 
     }
 
@@ -110,19 +112,24 @@ public class MeasuresController implements Initializable {
 
     }
 
-    private void drawChart(List<Pair<Number, Number>> data, String name){
+    private void drawChart(List<PRData> data, String name){
 
         series = new XYChart.Series<Number, Number>();
         series.setName(name);
-        Iterator<Pair<Number, Number>> it = data.iterator();
-        while(it.hasNext()){
-            Pair<Number, Number> pair = it.next();
-            series.getData().add(new XYChart.Data<Number, Number>(pair.getKey(), pair.getValue()));
+        Iterator<PRData> it = data.iterator();
+        while(it.hasNext()) {
+            PRData d = it.next();
+            series.getData().add(new XYChart.Data<Number, Number>(d.getRecall(), d.getPrecision()));
         }
 
         Ch.getData().add(series);
-
-
+        int p = 1;
+        for (XYChart.Data<Number, Number> d : series.getData()) {
+            Tooltip.install(d.getNode(), new Tooltip("Position: " + p));
+            d.getNode().setOnMouseEntered(event -> d.getNode().setStyle("-fx-background-color: ORANGE;"));
+            d.getNode().setOnMouseExited(event -> d.getNode().setStyle(""));
+            p++;
+       }
 
     }
 
