@@ -97,6 +97,27 @@
                      </font>
                   </Label>
                </children>
+               <children>
+               <Label prefHeight="25.0" prefWidth="101.0" text="nDCG :">
+                  <padding>
+                     <Insets left="10.0" />
+                  </padding>
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Label>
+               <Label fx:id="resnDCG" prefHeight="28.0" prefWidth="237.0">
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+                  <padding>
+                     <Insets left="50.0" />
+                  </padding>
+                  <font>
+                     <Font size="13.0" />
+                  </font>
+               </Label>
+               </children>
                <HBox.margin>
                   <Insets top="20.0" />
                </HBox.margin>

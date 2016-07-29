@@ -27,6 +27,7 @@ public class MeasuresController implements Initializable {
     private ArrayList<QueryEval> evals;
     private File file;
     private static final int POSITIONS = 10;
+    private static final String dFMT = "%1.4f";
 
     @FXML
     private TextField pathRelev;
@@ -36,6 +37,8 @@ public class MeasuresController implements Initializable {
     private LineChart<Number, Number> Ch ;
     @FXML
     private Label resFMeasureLabel;
+    @FXML
+    private Label resnDCG;
 
     private XYChart.Series<Number, Number> series;
 
@@ -96,11 +99,10 @@ public class MeasuresController implements Initializable {
         String query = eval.toString();
         Response response = SUFTHelper.getInstance().search(query, POSITIONS);
         drawChart(eval.datacharts(response),query);
-        double fmeasure = eval.fmeasure(response);
-        this.resFMeasureLabel.setText(fmeasure + "");
+        this.resFMeasureLabel.setText(String.format(dFMT,  eval.fmeasure(response)));
         System.out.println("Precision: " + eval.precision(response));
         System.out.println("Recall: " + eval.recall(response));
-
+        this.resnDCG.setText(String.format(dFMT, eval.calculateNDCG(response)));
     }
 
     private File showFileChooser(String title){
@@ -125,7 +127,10 @@ public class MeasuresController implements Initializable {
         Ch.getData().add(series);
         int p = 1;
         for (XYChart.Data<Number, Number> d : series.getData()) {
-            Tooltip.install(d.getNode(), new Tooltip("Position: " + p));
+            Tooltip.install(d.getNode(), new Tooltip(
+            "Position: " + p
+            + "\nPrecision: " + String.format(dFMT,d.getYValue())
+            + "\nRecall: " + String.format(dFMT,d.getXValue())));
             d.getNode().setOnMouseEntered(event -> d.getNode().setStyle("-fx-background-color: ORANGE;"));
             d.getNode().setOnMouseExited(event -> d.getNode().setStyle(""));
             p++;
