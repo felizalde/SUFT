@@ -112,6 +112,34 @@ public class QueryEval {
           out.add(new PRData(p, r));
       }
       return out;
-  }
+    }
+
+    public double calculateNDCG(Response response){
+        double dcg = 0;
+        double idcg = calculateIDCG(response.getItemsCount());
+
+        if (idcg == 0){
+            return 0;
+          }
+
+        Iterator<UThread> it = response.getItems().iterator();
+        int pos = 0;
+        while (it.hasNext()){
+            String id = it.next().getID();
+            if (isRelevant(id)){
+                dcg += Math.log(2) / Math.log(pos + 2);
+              }
+            pos++;
+          }
+
+        return (dcg/idcg);
+      }
+
+      private double calculateIDCG(int k){
+          double idcg = 0;
+          for (int i = 0; i < k; i++)
+              idcg += Math.log(2) / Math.log(i + 2);
+          return idcg;
+        }
 
 }
