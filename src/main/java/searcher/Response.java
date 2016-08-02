@@ -41,6 +41,9 @@ public class Response {
         this.timeSearching = timeSearching;
     }
 
+    public String getQuery(){
+        return this.query;
+    }
 
 
 }
