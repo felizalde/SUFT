@@ -27,6 +27,13 @@
                      </HBox.margin>
                   </Label>
                </children>
+               <children>
+                  <Label alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="317.0" text="Archivo de links:">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -36,13 +43,27 @@
             </HBox>
             <HBox VBox.vgrow="NEVER">
                <children>
-                  <TextField fx:id="pathLoad" disable="true" prefHeight="25.0" prefWidth="266.0">
+                  <TextField fx:id="pathLoad" disable="true" prefHeight="25.0" prefWidth="255.0">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
                   </TextField>
                   <Button fx:id="buttonBuscar" mnemonicParsing="false" onAction="#getPathIndex" text="Buscar" />
                   <Button fx:id="buttonCargar" mnemonicParsing="false" onAction="#loadIndex" text="Cargar">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+
+               <children>
+                  <TextField fx:id="pathLinks" disable="true" prefHeight="25.0" prefWidth="255.0">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="buttonBuscarLinks" mnemonicParsing="false" onAction="#getPathLinks" text="Buscar" />
+                  <Button fx:id="buttonCargarLinks" mnemonicParsing="false" onAction="#loadLinks" text="Cargar">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
@@ -55,11 +76,28 @@
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </HBox>
-            <Label fx:id="loadLabel">
-               <VBox.margin>
-                  <Insets left="5.0" top="3.0" />
-               </VBox.margin>
-            </Label>
+            <HBox>
+            <children>
+             <Label fx:id="loadLabel" alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="317.0" >
+              	<HBox.margin>
+                	<Insets left="5.0" right="50.0" />
+                </HBox.margin>
+              </Label>
+             </children>
+             <children>
+             <Label fx:id="linkLabel" alignment="BOTTOM_LEFT" prefHeight="17.0" prefWidth="317.0">
+             	<HBox.margin>
+                	<Insets left="5.0" right="5.0" />
+                </HBox.margin>
+             </Label>
+             </children>
+             <opaqueInsets>
+             	<Insets />
+             </opaqueInsets>
+             <VBox.margin>
+             	<Insets top="3.0" />
+             </VBox.margin>
+            </HBox>
          </children>
       </VBox>
    </top>

@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 public class ConfigController implements Initializable{
 
     @FXML
+    private TextField pathLinks;
+    @FXML
     private TextField pathLoad;
     @FXML
     private TextField pathSource;
@@ -35,25 +37,26 @@ public class ConfigController implements Initializable{
     private Label labelMsg;
     @FXML
     private Label loadLabel;
-
+    @FXML
+    private Label linkLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
 
     public void getPathIndex(){
-        String path = showFileChooser("Cargar indice");
+        String path = showDirectoryChooser("Cargar indice");
         this.pathLoad.setText(path);
 
     }
 
     public void getPathDataSet(){
-        String path = showFileChooser("Cargar el dataset.");
+        String path = showDirectoryChooser("Cargar el dataset.");
         this.pathSource.setText(path);
     }
 
     public void getPathOutputIndex(){
-        String path = showFileChooser("Directorio para guardar el indice.");
+        String path = showDirectoryChooser("Directorio para guardar el indice.");
         this.pathDestination.setText(path);
 
     }
@@ -97,7 +100,7 @@ public class ConfigController implements Initializable{
 
     }
 
-    private String showFileChooser(String title){
+    private String showDirectoryChooser(String title){
         DirectoryChooser directoryChooser =
                 new DirectoryChooser();
         directoryChooser.setTitle(title);
@@ -141,5 +144,39 @@ public class ConfigController implements Initializable{
             }
         };
     }
+    private String showFileChooser(String title){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        final File selected = fileChooser.showOpenDialog(null);
+        if (selected != null) {
+          return selected.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public void getPathLinks(){
+        String path = showFileChooser("Cargar links");
+        this.pathLinks.setText(path);
+      }
+
+    public void loadLinks(){
+        String path = this.pathLinks.getText();
+        if(path==null){
+            this.linkLabel.setText("Debe ingresar un path.");
+            return;
+          }
+        if(!path.isEmpty()){
+          try {
+              SUFTHelper.getInstance().generatePageRank(path);
+              this.linkLabel.setText("El PageRank fue generado con exito.");
+          } catch (IOException e) {
+              this.linkLabel.setText("El archivo de links no se pudo cargar.");
+              e.printStackTrace();
+            }
+        }else{
+            this.linkLabel.setText("Debe ingresar un path.");
+          }
+        }
 
 }
