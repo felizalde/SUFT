@@ -15,11 +15,14 @@ import java.util.ArrayList;
 
 public class SUFTHelper {
 
+    private static final double ALPHA = 0.15;
+    private Response lastResponse;
 
     private Indexer indexer;
     private Searcher searcher;
     private Analyzer analyzer;
     private Directory directory;
+    private PageRankSUFT ranking;
 
     private static SUFTHelper helper = null;
     private ArrayList<IndexListener> listeners = new ArrayList();
@@ -83,7 +86,11 @@ public class SUFTHelper {
     }
 
     public Response search(String query){
-        return this.searcher.search(query);
+        this.lastResponse = this.searcher.search(query);
+        if (this.ranking != null){
+          return this.ranking.sort(this.lastResponse);
+        }
+        return this.lastResponse;
     }
 
     public Response search(String query, int hits){
@@ -96,7 +103,10 @@ public class SUFTHelper {
         return this.indexer;
     }
 
+    public void generatePageRank(String path) throws IOException{
+        this.ranking = new PageRankSUFT();
+        this.ranking.createGraph(path);
+        this.ranking.evaluate(ALPHA);
+    }
+
 }
-
-
-
