@@ -77,7 +77,24 @@
              </LineChart>
             <VBox prefHeight="299.0" prefWidth="190.0">
                <children>
-                  <Label prefHeight="25.0" prefWidth="101.0" text="F-Measure :">
+               <HBox>
+               		<Label prefHeight="25.0" prefWidth="100.0" text="Posiciones:" >
+               			<padding>
+                        	<Insets left="10.0" />
+                     	</padding>
+                     	<font>
+                     	   <Font size="14.0" />
+                     	</font>
+               		</Label>
+               		<Spinner fx:id="spinner" prefWidth="60.0" editable="true" >
+			            <valueFactory>
+			                <SpinnerValueFactory.IntegerSpinnerValueFactory min="10" max="50" initialValue="10" amountToStepBy="5"/>
+			            </valueFactory>
+			        </Spinner>
+			    </HBox>
+              	</children>
+               <children>
+                  <Label alignment="BOTTOM_LEFT" prefHeight="50.0" prefWidth="237.0" text="nDCG sin PageRank :">
                      <padding>
                         <Insets left="10.0" />
                      </padding>
@@ -85,7 +102,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="resFMeasureLabel" prefHeight="28.0" prefWidth="237.0">
+                  <Label fx:id="resnDCGsp" prefHeight="28.0" prefWidth="237.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -97,27 +114,27 @@
                      </font>
                   </Label>
                </children>
-               <children>
-               <Label prefHeight="25.0" prefWidth="101.0" text="nDCG :">
-                  <padding>
-                     <Insets left="10.0" />
-                  </padding>
-                  <font>
-                     <Font size="14.0" />
-                  </font>
-               </Label>
-               <Label fx:id="resnDCG" prefHeight="28.0" prefWidth="237.0">
-                  <VBox.margin>
-                     <Insets />
-                  </VBox.margin>
-                  <padding>
-                     <Insets left="50.0" />
-                  </padding>
-                  <font>
-                     <Font size="13.0" />
-                  </font>
-               </Label>
-               </children>
+                 <children>
+                  <Label prefHeight="25.0" prefWidth="237.0" text="nDCG con PageRank :">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="resnDCGcp" prefHeight="28.0" prefWidth="237.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  </children>
                <HBox.margin>
                   <Insets top="20.0" />
                </HBox.margin>

@@ -36,15 +36,17 @@ public class MeasuresController implements Initializable {
     @FXML
     private LineChart<Number, Number> Ch ;
     @FXML
-    private Label resFMeasureLabel;
+    private Label resnDCGsp;
     @FXML
-    private Label resnDCG;
+    private Label resnDCGcp;
+    @FXML
+    private Spinner spinner;
 
-    private XYChart.Series<Number, Number> series;
+    private XYChart.Series<Number, Number> sorted;
+    private XYChart.Series<Number, Number> unsorted;
 
 
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     public void loadQuerysEvalFile(){
@@ -55,6 +57,7 @@ public class MeasuresController implements Initializable {
     }
 
     public void generateQueryEvals(){
+
         if (file == null){
             System.out.println("No file selected.");
             return;
@@ -69,15 +72,15 @@ public class MeasuresController implements Initializable {
                     String[] second = line.split(">");
                     String[] query = second[1].split("<");
                     evals.add(new QueryEval(query[0]));
-                }
+                 }
                 else{
-                    String[ ] dat = line.split(" ");
-                    try{
-                        evals.get(evals.size()-1).put(dat[0], Integer.parseInt(dat[1]));
-                    }
-                    catch (RuntimeException e){
-                        System.out.println(e.getMessage());
-                    }
+                	String[ ] dat = line.split(" ");
+	                try{
+	                	evals.get(evals.size()-1).put(dat[0], Integer.parseInt(dat[1]));
+	                }
+	                catch (RuntimeException e){
+	                	System.out.println(e.getMessage());
+	                }
                 }
             }
         } catch (FileNotFoundException e) {
@@ -90,19 +93,28 @@ public class MeasuresController implements Initializable {
     }
 
     public void showMeasures(){
-        Ch.getData().remove(series);
+    	int positions = POSITIONS;
+    	try{
+    		positions = (Integer)spinner.getValue();
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
+
+
+        Ch.getData().remove(sorted);
+        Ch.getData().remove(unsorted);
         QueryEval eval = (QueryEval) querysChoiceBox.getValue();
         if (eval == null){
             System.out.println("Error: no query selected.");
             return;
         }
         String query = eval.toString();
-        Response response = SUFTHelper.getInstance().search(query, POSITIONS);
-        drawChart(eval.datacharts(response),query);
-        this.resFMeasureLabel.setText(String.format(dFMT,  eval.fmeasure(response)));
-        System.out.println("Precision: " + eval.precision(response));
-        System.out.println("Recall: " + eval.recall(response));
-        this.resnDCG.setText(String.format(dFMT, eval.calculateNDCG(response)));
+        Response rsorted = SUFTHelper.getInstance().search(query, positions);
+        Response runsorted = SUFTHelper.getInstance().getLastResponse();
+        drawSorted(eval.datacharts(rsorted));
+        drawUnsorted(eval.datacharts(runsorted));
+        this.resnDCGsp.setText(String.format(dFMT,  eval.calculateNDCG(runsorted)));
+        this.resnDCGcp.setText(String.format(dFMT, eval.calculateNDCG(rsorted)));
     }
 
     private File showFileChooser(String title){
@@ -114,27 +126,58 @@ public class MeasuresController implements Initializable {
 
     }
 
-    private void drawChart(List<PRData> data, String name){
 
-        series = new XYChart.Series<Number, Number>();
-        series.setName(name);
+    //Should refactor here.
+    private void drawSorted(List<PRData> data){
+
+        sorted = new XYChart.Series<Number, Number>();
+        sorted.setName("sorted");
         Iterator<PRData> it = data.iterator();
-        while(it.hasNext()) {
-            PRData d = it.next();
-            series.getData().add(new XYChart.Data<Number, Number>(d.getRecall(), d.getPrecision()));
+
+        while(it.hasNext()){
+            PRData prdata = it.next();
+            XYChart.Data<Number, Number> d = new XYChart.Data<Number, Number>(prdata.getRecall(), prdata.getPrecision());
+            sorted.getData().add(d);
         }
 
-        Ch.getData().add(series);
+        Ch.getData().add(sorted);
         int p = 1;
-        for (XYChart.Data<Number, Number> d : series.getData()) {
+        for (XYChart.Data<Number, Number> d : sorted.getData()) {
             Tooltip.install(d.getNode(), new Tooltip(
-            "Position: " + p
-            + "\nPrecision: " + String.format(dFMT,d.getYValue())
-            + "\nRecall: " + String.format(dFMT,d.getXValue())));
+            		"Position: " + p
+            		+ "\nPrecision: " + String.format(dFMT,d.getYValue())
+            		+ "\nRecall: " + String.format(dFMT,d.getXValue())));
             d.getNode().setOnMouseEntered(event -> d.getNode().setStyle("-fx-background-color: ORANGE;"));
             d.getNode().setOnMouseExited(event -> d.getNode().setStyle(""));
             p++;
-       }
+        }
+
+    }
+
+    //Should refactor here.
+    private void drawUnsorted(List<PRData> data){
+
+        unsorted = new XYChart.Series<Number, Number>();
+        unsorted.setName("unsorted");
+        Iterator<PRData> it = data.iterator();
+
+        while(it.hasNext()){
+            PRData prdata = it.next();
+            XYChart.Data<Number, Number> d = new XYChart.Data<Number, Number>(prdata.getRecall(), prdata.getPrecision());
+            unsorted.getData().add(d);
+        }
+
+        Ch.getData().add(unsorted);
+        int p = 1;
+        for (XYChart.Data<Number, Number> d : unsorted.getData()) {
+            Tooltip.install(d.getNode(), new Tooltip(
+            		"Position: " + p
+            		+ "\nPrecision: " + String.format(dFMT,d.getYValue())
+            		+ "\nRecall: " + String.format(dFMT,d.getXValue())));
+            d.getNode().setOnMouseEntered(event -> d.getNode().setStyle("-fx-background-color: ORANGE;"));
+            d.getNode().setOnMouseExited(event -> d.getNode().setStyle(""));
+            p++;
+        }
 
     }
 
