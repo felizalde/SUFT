@@ -41,6 +41,7 @@ public class PageRankSUFT {
 	    			}
 	    			graph.addEdge((partes[0]+" -> "+partes[1]), partes[0],partes[1]);
 	    	}
+				graph.addVertex("unlinked")
 	    	in.close();
 			}
 
@@ -51,7 +52,8 @@ public class PageRankSUFT {
 			}
 
 		public Response sort(Response response){
-				List<UThread> threads = response.getItems();
+				List<UThread> threads = new ArrayList<>();
+				threads.addAll(response.getItems());
 				Collections.sort(threads, cmp);
 				Response sorted = new Response(response.getQuery());
 				sorted.setItems(threads);
@@ -59,8 +61,12 @@ public class PageRankSUFT {
 			}
 
 		public Double getScore(String vertex){
+			if (this.graph.containsVertex(vertex)){
 				return (Double)this.ranking.getVertexScore(vertex);
-		}
+			}else{
+				//HACK.
+				return (Double)this.ranking.getVertexScore("unlinked");
+			}
 
 
 }
