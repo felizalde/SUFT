@@ -15,6 +15,7 @@ public class Main extends Application {
     public static final String CONFIG_FXML = "/config.fxml";
     public static final String MEASURE_FXML = "/measures.fxml";
 
+    private static Main mInstance;
 
     private Stage primaryStage;
     private static BorderPane mainLayout;
@@ -35,6 +36,7 @@ public class Main extends Application {
         showMainView();
         showSearchScene();
 
+        mInstance = this;
 
     }
 
@@ -56,6 +58,10 @@ public class Main extends Application {
 
     public static void showMeasureScene(){
         mainLayout.setCenter(measurePane);
+    }
+
+    public static Application getInstance(){
+        return mInstance;
     }
 
     public static void main(String[] args) {
