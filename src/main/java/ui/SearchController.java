@@ -58,11 +58,7 @@ public class SearchController implements Initializable{
                 if(event.getClickCount() > 1){
                     String path = listview.getSelectionModel().getSelectedItem().toString();
                     if (path != null){
-                      try {
-                        new ProcessBuilder("x-www-browser", path).start();
-                      } catch (IOException e) {
-                        e.printStackTrace();
-                      }
+                      Main.getInstance().getHostServices().showDocument(path);
                     }
                   }
                 }
