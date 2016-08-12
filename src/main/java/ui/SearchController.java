@@ -5,18 +5,18 @@ import core.SUFTHelper;
 import core.UThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import searcher.Response;
-import javafx.scene.input.MouseEvent;
-import javafx.event.EventHandler;
-import java.io.IOException;
+
 import java.net.URL;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 
 public class SearchController implements Initializable{
@@ -26,7 +26,7 @@ public class SearchController implements Initializable{
     @FXML
     private TextField inputSearch;
     @FXML
-    private ListView<UThread> listview = new ListView<UThread>();
+    private ListView<UThread> listview = new ListView<>();
 
     private ObservableList<UThread> result;
 
@@ -36,7 +36,7 @@ public class SearchController implements Initializable{
 
             @Override
             public ListCell<UThread> call(ListView<UThread> param) {
-                ListCell<UThread> cell = new ListCell<UThread>() {
+                return new ListCell<UThread>() {
 
                     @Override
                     protected void updateItem(UThread item, boolean empty) {
@@ -48,7 +48,6 @@ public class SearchController implements Initializable{
                         }
                     }
                 };
-                return cell;
             }
         });
         result = FXCollections.observableArrayList();
@@ -80,9 +79,7 @@ public class SearchController implements Initializable{
         result.clear();
         Response res = SUFTHelper.getInstance().search(query);
         if (res!=null){
-            Iterator<UThread> it = res.getItems().iterator();
-            while (it.hasNext()){
-                UThread thread = it.next();
+            for (UThread thread : res.getItems()) {
                 result.add(thread);
             }
         }

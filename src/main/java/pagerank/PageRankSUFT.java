@@ -1,18 +1,14 @@
 package pagerank;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.List;
-
 import core.UThread;
-import searcher.Response;
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
+import searcher.Response;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class PageRankSUFT {
@@ -41,7 +37,7 @@ public class PageRankSUFT {
 	    			}
 	    			graph.addEdge((partes[0]+" -> "+partes[1]), partes[0],partes[1]);
 	    	}
-				graph.addVertex("unlinked")
+				graph.addVertex("unlinked");
 	    	in.close();
 			}
 
@@ -60,13 +56,14 @@ public class PageRankSUFT {
 				return sorted;
 			}
 
-		public Double getScore(String vertex){
-			if (this.graph.containsVertex(vertex)){
-				return (Double)this.ranking.getVertexScore(vertex);
-			}else{
+		public Double getScore(String vertex) {
+			if (this.graph.containsVertex(vertex)) {
+				return (Double) this.ranking.getVertexScore(vertex);
+			} else {
 				//HACK.
-				return (Double)this.ranking.getVertexScore("unlinked");
+				return (Double) this.ranking.getVertexScore("unlinked");
 			}
+		}
 
 
 }

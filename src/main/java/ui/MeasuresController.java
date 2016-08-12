@@ -8,12 +8,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import searcher.Response;
-import javafx.scene.control.Tooltip;
 
 import java.io.*;
 import java.net.URL;
@@ -62,7 +59,7 @@ public class MeasuresController implements Initializable {
             System.out.println("No file selected.");
             return;
         }
-        evals = new ArrayList<QueryEval>();
+        evals = new ArrayList<>();
         try {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);

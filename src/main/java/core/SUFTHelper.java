@@ -6,6 +6,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import pagerank.PageRankSUFT;
 import searcher.Response;
 import searcher.Searcher;
 
@@ -103,10 +104,13 @@ public class SUFTHelper {
         return this.indexer;
     }
 
-    public void generatePageRank(String path) throws IOException{
+    public void generatePageRank(String path) throws IOException {
         this.ranking = new PageRankSUFT();
         this.ranking.createGraph(path);
         this.ranking.evaluate(ALPHA);
     }
 
+    public Response getLastResponse() {
+        return lastResponse;
+    }
 }
